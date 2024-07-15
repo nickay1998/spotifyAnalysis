@@ -1,6 +1,6 @@
 import streamlit as st
+from login import get_access_token
 
-st.title("🎈 My new app")
-st.write(
-    "Let's start building! For help and inspiration, head over to [docs.streamlit.io](https://docs.streamlit.io/)."
-)
+if st.button("Get access token!"):
+    get_access_token()
+    st.success(f"Successfully acquired access token: " + st.session_state["access_token"], icon="✅")
