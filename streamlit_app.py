@@ -3,15 +3,22 @@ from login import get_access_token
 import streamlit_antd_components as sac
 from utilities.search import search
 from utilities.requester import get_image
+from utilities.images import crop_center_square
 from classes import Album, Artist, Track
+from streamlit_js_eval import streamlit_js_eval
+from PIL import Image
 
 if __name__ == '__main__':
-    if "access_token" not in st.session_state:
-        if st.button("Get access token!"):
-            get_access_token()
-            st.toast(f"Successfully acquired access token: " + st.session_state["access_token"], icon="✅")
-
-    if "access_token" in st.session_state:
+    st.set_page_config(page_title="Spotify Analysis", layout="wide")
+    window_width = streamlit_js_eval(js_expressions='window.innerWidth', key = 'SCR')
+    if "logged_in" not in st.session_state:
+        st.session_state.logged_in = False
+        
+    if not st.session_state["logged_in"]:
+        get_access_token()
+        st.toast(f"Successfully acquired access token: " + st.session_state["access_token"], icon="✅")
+    
+    if st.session_state["logged_in"]:
         with st.form(key="Search"):
             search_text = st.text_input("Search")
             submit_button = st.form_submit_button(label="Submit")
@@ -36,9 +43,16 @@ if __name__ == '__main__':
 
             display_type = sac.tabs(search_types, align='center', use_container_width=True)
 
-            for result in search_results[display_type]:
-                col1, col2, col3, col4 = st.columns(4)
-                with col1:
-                    st.image(get_image(result.images[0]["url"]), use_column_width=True)
-                with col2:
-                    st.write(result.name)
+            grouped_list = [search_results[display_type][i:i+5] for i in range(0, len(search_results[display_type]), 5)]
+            for group in grouped_list:
+                cols = st.columns(5)
+                for i, result in enumerate(group):
+                    with cols[i].container(border=True):                    
+                        name = result.name
+                        if len(result.name) >= window_width * 0.023:
+                            name = name[:int(window_width * 0.023)] + '...'
+                        if len(result.images) == 0:
+                            st.image(Image.open("./assets/blank.png"), caption=name)
+                        else:
+                            st.image(crop_center_square(get_image(result.images[0]["url"])), caption=name)
+                        #st.image(get_image(result.images[0]["url"]), width=int(window_width*0.17))

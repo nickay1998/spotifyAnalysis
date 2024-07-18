@@ -20,8 +20,15 @@ def post_data(url, headers, data):
     
     return response.json()
 
-def get_image(url):
+def get_image(url, width = 0, height = 0):
     response = requests.get(url)
     image = Image.open(BytesIO(response.content))
-    
+
+    if width != 0 and height != 0:
+        image = image.resize((height, width))
+    elif width != 0:
+        image = image.resize((width, int(image.height * image.width / width)))
+    elif height != 0:
+        image = image.resize((int(image.width * height / image.height), height))
+
     return image

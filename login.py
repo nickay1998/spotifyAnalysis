@@ -8,5 +8,5 @@ def get_access_token():
 
     access_token_response = post_data(url, headers, data)
     st.session_state["access_token"] = access_token_response["access_token"]
-
+    st.session_state["logged_in"] = True
     print("Access key acquired!")
