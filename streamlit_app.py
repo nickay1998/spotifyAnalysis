@@ -70,5 +70,6 @@ if __name__ == '__main__':
                                 "div": {
                                     "padding": "1px"
                                 }
-                            }
+                            },
+                            key=result.id
                         )
