@@ -1,4 +1,6 @@
 from PIL import Image
+import streamlit as st
+import streamlit.components.v1 as components
 
 def crop_center_square(image):
     # Get the width and height of the image

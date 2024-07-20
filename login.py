@@ -10,3 +10,11 @@ def get_access_token():
     st.session_state["access_token"] = access_token_response["access_token"]
     st.session_state["logged_in"] = True
     print("Access key acquired!")
+
+def check_login():
+    if "logged_in" not in st.session_state:
+        st.session_state.logged_in = False
+        
+    if not st.session_state["logged_in"]:
+        get_access_token()
+        st.toast(f"Successfully acquired access token: " + st.session_state["access_token"], icon="✅")
