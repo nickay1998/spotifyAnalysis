@@ -1,0 +1,1 @@
+from pages.details import show_details
