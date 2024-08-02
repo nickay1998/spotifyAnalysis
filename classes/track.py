@@ -10,3 +10,4 @@ class Track:
         self.album = data['album']['name']
         self.duration = data["duration_ms"]
         self.images = data['album']['images']
+        self.data = data

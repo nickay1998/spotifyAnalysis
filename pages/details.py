@@ -1,6 +1,8 @@
 import streamlit as st
 import utilities.streamlit_extensions as ste
 from streamlit_card import card
+from datetime import datetime
+from utilities.datetime_extensions import convert_to_date_string, convert_to_datetime, calculate_time_since_string
 
 def show_details():
     title = st.session_state["nav"].title
@@ -29,4 +31,7 @@ def show_details():
         url=image_link
     )
     
-    ste.write_center(f"{data.name} - {', '.join(data.artists)}")
+    ste.write_center(data.name)
+    ste.write_center(f"By {', '.join(data.artists)}")
+    
+    ste.write_center(f"Released {calculate_time_since_string(data.release_date)} on {convert_to_date_string(convert_to_datetime(data.release_date))}")

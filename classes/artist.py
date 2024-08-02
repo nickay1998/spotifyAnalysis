@@ -16,3 +16,4 @@ class Artist:
         self.popularity = data["popularity"]
         self.uri = data["uri"]
         self.url = data["external_urls"]["spotify"]
+        self.data = data
