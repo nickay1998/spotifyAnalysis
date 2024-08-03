@@ -47,11 +47,19 @@ def add_page(title, data):
     nav = st.navigation(st.session_state["pages"])
 
 with st.form(key="Search"):
-    search_text = st.text_input("Search")
+    if "search_text" not in st.session_state:
+        search_text = st.text_input("Search")
+    else:
+        search_text = st.text_input("Search", value=st.session_state["search_text"])
     st.form_submit_button(label="Submit")
 
 if search_text != "":
-    search_raw_results = search(search_text)
+    if "search_text" in st.session_state:
+        if search_text == st.session_state["search_text"]:
+            search_raw_results = st.session_state["search_raw_results"]
+    else:
+        search_raw_results = search(search_text)
+
     search_types = list(search_raw_results.keys())
     display_type = sac.tabs(search_types, align='center', use_container_width=True)
     columns = int(st.session_state["window_width"] / 270)
@@ -88,3 +96,6 @@ if search_text != "":
                     key=result.id,
                     on_click=lambda: add_page(name, result)
                 )
+    
+    st.session_state["search_text"] = search_text
+    st.session_state["search_raw_results"] = search_raw_results
